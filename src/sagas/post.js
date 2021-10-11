@@ -12,13 +12,15 @@ function* getPostsRequestHandler() {
     try {
         const response = yield call(getPostsRequest); // Yield get posts requests promise
         const posts = response.data;
-        const newPosts = posts.map(post => ({ // add showComments boolean value
+        const newPosts = posts.map(post => ({ // add showComments boolean value & comments array
             ...post,
-            showComments: false
+            showComments: false,
+            fetchComments: true,
+            comments: []
         }));
 
         yield put(postsActions.setPosts(newPosts)); // Yield posts actions to set received posts
-    } catch(error) {
+    } catch (error) {
         console.log(error);
     }
 }

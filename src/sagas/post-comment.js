@@ -12,7 +12,7 @@ function* getPostCommentsRequestHandler(action) {
     try {
         const response = yield call(() => getPostCommentRequest(action.payload));
         const postComments = response.data;
-        yield put(postsActions.setPostComments(postComments));
+        yield put(postsActions.setPostComments({ postId: action.payload, postComments }));
     } catch (error) {
         console.log(error);
     }

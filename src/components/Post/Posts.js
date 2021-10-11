@@ -8,8 +8,6 @@ const Posts = () => {
     const dispatch = useDispatch();
     const posts = useSelector(state => state.posts.posts);
 
-    console.log('posts', posts);
-    
     useEffect(() => {
         dispatch({ type: 'FETCH_POSTS' });
     }, [dispatch]);
@@ -19,7 +17,9 @@ const Posts = () => {
             <Title title="Posty" />
             <div className="row">
                 {posts.map((post) => (
-                    <Post key={post.id} id={post.id} title={post.title} body={post.body} showComments={post.showComments} />
+                    <Post
+                        key={post.id}
+                        {...post} />
                 ))}
             </div>
         </section>
