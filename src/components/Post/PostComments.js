@@ -17,8 +17,6 @@ const PostComments = ({ postId, fetchComments, comments }) => {
         }
     }, [dispatch]);
 
-    console.log('comments', comments);
-
     return (<ul className="list-group list-group-flush mt-4">
         {comments.map(comment => <PostComment key={comment.id} name={comment.name} body={comment.body} />)}
         <li className="list-group-item">

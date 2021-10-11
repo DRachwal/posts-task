@@ -4,14 +4,25 @@ import PropTypes from 'prop-types';
 
 import { postsActions } from '../../store/post';
 
+import Input from '../Input';
+
+const INITIAL_INPUT_VALUES = {
+    name: '',
+    email: '',
+    body: ''
+};
+
+const INITIAL_INPUT_ERRORS = {
+    name: false,
+    email: false,
+    body: false
+};
+
 const AddPostComment = ({ postId }) => {
     const dispatch = useDispatch();
 
-    const [inputValues, setInputValues] = useState({
-        name: '',
-        email: '',
-        body: ''
-    });
+    const [inputValues, setInputValues] = useState(INITIAL_INPUT_VALUES);
+    const [inputErrors, setInputErrors] = useState(INITIAL_INPUT_ERRORS);
 
     const changeHandler = e => {
         const { name, value } = e.target;
@@ -25,28 +36,65 @@ const AddPostComment = ({ postId }) => {
     const submitHandler = e => {
         e.preventDefault();
 
-        const newComment = {
-            postId,
-            id: Date.now(),
-            ...inputValues
+        // Check inputs validity
+        const regName = /^[\s\p{L}]/u;
+        const regEmail = /^\S+@\S+$/;
+
+        const errors = {
+            name: !regName.test(inputValues.name) && 'Wprowadź prawidłowe imię',
+            email: !regEmail.test(inputValues.email) && 'Wprowadź prawidłowy adres email',
+            body: inputValues.body.trim().length === 0 && 'Pole nie może być puste'
         };
 
-        dispatch(postsActions.addPostComment(newComment));
+        if (errors.name || errors.email || errors.body) {
+            setInputErrors(errors);
+            return;
+        } else {
+            // Validation success
+            const newComment = {
+                postId,
+                id: Date.now(),
+                ...inputValues
+            };
+
+            dispatch(postsActions.addPostComment(newComment));
+            setInputValues(INITIAL_INPUT_VALUES);
+            setInputErrors(INITIAL_INPUT_ERRORS);
+        }
     };
 
     return (
         <form onSubmit={submitHandler}>
-            <div className='mb-3'>
-                <label htmlFor='name' className='form-label'>Imię</label>
-                <input type='text' name='name' className='form-control' id='name' value={inputValues.name} onChange={changeHandler} />
-            </div>
-            <div className='mb-3'>
-                <label htmlFor='email' className='form-label'>Email</label>
-                <input type='email' name='email' className='form-control' id='email' value={inputValues.email} onChange={changeHandler} />
-            </div>
+            <Input
+                label='Imię'
+                input={{
+                    type: 'text',
+                    name: 'name',
+                    id: 'name',
+                    value: inputValues.name,
+                    onChange: changeHandler
+                }}
+                error={inputErrors.name} />
+            <Input
+                label='Email'
+                input={{
+                    type: 'email',
+                    name: 'email',
+                    id: 'email',
+                    value: inputValues.email,
+                    onChange: changeHandler
+                }}
+                error={inputErrors.email} />
             <div className='mb-3'>
                 <label htmlFor='body' className='form-label'>Komentarz</label>
-                <textarea className='form-control' name='body' id='body' value={inputValues.body} onChange={changeHandler} />
+                <textarea 
+                    className={`form-control ${inputErrors.body && 'is-invalid'}`}
+                    name='body' 
+                    id='body'
+                    maxLength={100}
+                    value={inputValues.body} 
+                    onChange={changeHandler} />
+                {inputErrors.body && <div className='invalid-feedback'>{inputErrors.body}</div>}
             </div>
             <button type='submit' className='btn btn-primary'>Dodaj komentarz</button>
         </form>

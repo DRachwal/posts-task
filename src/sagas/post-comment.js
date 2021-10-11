@@ -4,7 +4,6 @@ import axios from 'axios';
 import { postsActions } from '../store/post';
 
 const getPostCommentRequest = (id) => {
-    console.log('getPostCommentRequest', id);
     return axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${id}`);
 };
 

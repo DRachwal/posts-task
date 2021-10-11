@@ -1,21 +1,32 @@
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+
 import { postsActions } from '../../store/post';
+
 import PostComments from './PostComments';
 
-const Post = ({ id, title, body, showComments, fetchComments, comments }) => {
+import styles from './Post.module.css';
+
+const Post = ({ id, title, body, showComments, fetchComments, favourite, comments }) => {
     const dispatch = useDispatch();
 
     const toggleCommentsHandler = () => {
         dispatch(postsActions.toggleComments(id));
     };
 
+    const toggleFavourite = () => {
+        dispatch(postsActions.toggleFavourite(id));
+    };
+
     const buttonText = `${showComments ? 'Ukryj' : 'Pokaż'} Komentarze`;
+    const favouriteIconStyle = `${styles.favourite} ${favourite && 'text-primary'} float-right`;
 
     return (
         <div className='col-lg-12'>
-            <div className='card mt-4'>
-                <h4 className='card-header'>{title}</h4>
+            <div className='card mb-4'>
+                <h4 className='card-header d-flex justify-content-between align-items-center'>
+                    {title} 
+                    <span className={favouriteIconStyle} onClick={toggleFavourite}>&#9829;</span></h4>
                 <div className='card-body'>
                     <p className='card-text'>{body}</p>
                     <button onClick={toggleCommentsHandler} className='btn btn-primary'>{buttonText}</button>
@@ -32,7 +43,8 @@ Post.propTypes = {
     body: PropTypes.string,
     showComments: PropTypes.bool,
     fetchComments: PropTypes.bool,
-    comments: PropTypes.array
+    comments: PropTypes.array,
+    favourite: PropTypes.bool
 };
 
 export default Post;

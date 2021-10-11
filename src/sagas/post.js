@@ -16,6 +16,7 @@ function* getPostsRequestHandler() {
             ...post,
             showComments: false,
             fetchComments: true,
+            favourite: false,
             comments: []
         }));
 
