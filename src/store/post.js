@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     posts: [],
+    filters: {},
     currentPageNo: 1,
     pageRange: 10
 };
@@ -37,6 +38,9 @@ const postsSlice = createSlice({
         toggleFavourite(state, action) {
             const existingPost = state.posts.find(post => post.id === action.payload);
             existingPost.favourite = !existingPost.favourite;
+        },
+        setPostFilters(state, action) {
+            state.filters = action.payload;
         }
     },
 });

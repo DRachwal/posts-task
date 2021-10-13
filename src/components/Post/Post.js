@@ -7,7 +7,7 @@ import PostComments from './PostComments';
 
 import styles from './Post.module.css';
 
-const Post = ({ id, title, body, showComments, fetchComments, favourite, comments }) => {
+const Post = ({ id, title, body, showComments, fetchComments, favourite, comments, name }) => {
     const dispatch = useDispatch();
 
     const toggleCommentsHandler = () => {
@@ -29,6 +29,7 @@ const Post = ({ id, title, body, showComments, fetchComments, favourite, comment
                     <span className={favouriteIconStyle} onClick={toggleFavourite}>&#9829;</span></h4>
                 <div className='card-body'>
                     <p className='card-text'>{body}</p>
+                    <p className='card-text'><small className='text-muted'>{name}</small></p>
                     <button onClick={toggleCommentsHandler} className='btn btn-primary'>{buttonText}</button>
                     {showComments && <PostComments postId={id} fetchComments={fetchComments} comments={comments} />}
                 </div>
@@ -44,7 +45,8 @@ Post.propTypes = {
     showComments: PropTypes.bool,
     fetchComments: PropTypes.bool,
     comments: PropTypes.array,
-    favourite: PropTypes.bool
+    favourite: PropTypes.bool,
+    name: PropTypes.string
 };
 
 export default Post;
